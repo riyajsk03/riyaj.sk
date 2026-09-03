@@ -1,0 +1,326 @@
+@import "tailwindcss";
+
+@layer base {
+  :root, html[data-theme="light"] {
+    --font-sans: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+    /* Monochromatic Foundations - Light Mode */
+    --bg: #FFFFFF;
+    --bg-subtle: #F8F8F9;
+    --surface: #FFFFFF;
+    --surface-secondary: #F3F3F5;
+    --surface-tertiary: #EAEAEF;
+    
+    /* Typography Levels (Contrast & Opacity) */
+    --text-primary: #0A0A0A;
+    --text-secondary: rgba(10, 10, 10, 0.68);
+    --text-tertiary: rgba(10, 10, 10, 0.45);
+
+    /* Borders & Dividers */
+    --border: rgba(10, 10, 10, 0.08);
+    --border-strong: rgba(10, 10, 10, 0.16);
+    --border-hover: rgba(10, 10, 10, 0.35);
+
+    /* Intentional Accents: Red & Green Only */
+    --accent-red: #DC2626;
+    --accent-red-subtle: rgba(220, 38, 38, 0.08);
+    --accent-green: #16A34A;
+    --accent-green-subtle: rgba(22, 163, 74, 0.08);
+
+    /* Button Tokens matching the Reference Pill Style */
+    --btn-pill-bg: #111116;
+    --btn-pill-text: #FFFFFF;
+    --btn-pill-border: rgba(0, 0, 0, 0.08);
+    --btn-pill-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.22), 0 2px 6px -1px rgba(0, 0, 0, 0.10);
+    --btn-pill-shadow-hover: 0 14px 30px -4px rgba(0, 0, 0, 0.32), 0 4px 10px -1px rgba(0, 0, 0, 0.15);
+
+    /* Shadows - Restrained, Architectural */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.08);
+  }
+
+  html[data-theme="dark"], .dark {
+    --font-sans: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+    /* Monochromatic Foundations - Dark Mode */
+    --bg: #09090B;
+    --bg-subtle: #111114;
+    --surface: #141418;
+    --surface-secondary: #1A1A20;
+    --surface-tertiary: #22222A;
+
+    /* Typography Levels (White with Opacity) */
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.70);
+    --text-tertiary: rgba(255, 255, 255, 0.45);
+
+    /* Borders & Dividers */
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --border-hover: rgba(255, 255, 255, 0.35);
+
+    /* Intentional Accents: Red & Green Only */
+    --accent-red: #EF4444;
+    --accent-red-subtle: rgba(239, 68, 68, 0.12);
+    --accent-green: #22C55E;
+    --accent-green-subtle: rgba(34, 197, 94, 0.12);
+
+    /* Button Tokens matching the Reference Pill Style */
+    --btn-pill-bg: #111116;
+    --btn-pill-text: #FFFFFF;
+    --btn-pill-border: rgba(255, 255, 255, 0.16);
+    --btn-pill-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.45), 0 2px 6px -1px rgba(0, 0, 0, 0.25);
+    --btn-pill-shadow-hover: 0 14px 32px -4px rgba(0, 0, 0, 0.60), 0 4px 10px -1px rgba(0, 0, 0, 0.35);
+
+    /* Shadows - Restrained, Deep */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.6);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Minimalist Editorial Surfaces & Multi-Layered Depth */
+.editorial-glass {
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.depth-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 180ms ease;
+}
+
+.depth-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.editorial-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.editorial-card:hover {
+  border-color: var(--border-strong);
+}
+
+/* Paper Tear Seam & Perforations */
+.perforation-line {
+  background-image: linear-gradient(to right, var(--border-strong) 50%, rgba(255,255,255,0) 0%);
+  background-position: bottom;
+  background-size: 8px 1.5px;
+  background-repeat: repeat-x;
+}
+
+@keyframes paperTearWobble {
+  0% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-2deg) translateY(4px); }
+  50% { transform: rotate(3deg) translateY(12px); }
+  75% { transform: rotate(-1deg) translateY(24px); }
+  100% { transform: rotate(0deg) translateY(32px); }
+}
+
+.animate-paper-tear {
+  animation: paperTearWobble 400ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Buttons - Exact Pill Capsule Styling matching the Reference Image */
+.btn-primary {
+  background-color: var(--btn-pill-bg);
+  color: var(--btn-pill-text);
+  border-radius: 9999px;
+  padding: 11px 26px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  box-shadow: var(--btn-pill-shadow);
+  border: 1px solid var(--btn-pill-border);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 180ms ease,
+              opacity 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1.5px);
+  box-shadow: var(--btn-pill-shadow-hover);
+  opacity: 0.96;
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background-color: var(--surface-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  padding: 11px 24px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 180ms ease,
+              border-color 180ms ease,
+              box-shadow 180ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background-color: var(--surface-tertiary);
+  border-color: var(--text-primary);
+  transform: translateY(-1.5px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 180ms ease,
+              background-color 180ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  border-color: var(--text-primary);
+  background-color: var(--surface-secondary);
+  transform: translateY(-1.5px);
+}
+
+.btn-outline:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Reference Circular Action Icon Badge (e.g., Watch Video play icon) */
+.btn-circle-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 180ms ease;
+}
+
+.group:hover .btn-circle-icon,
+button:hover .btn-circle-icon {
+  transform: scale(1.1);
+}
+
+/* Reference Eyebrow Typography (e.g., NEW COLOR PALETTE) */
+.font-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+}
+
+/* Reference Heading Display Typography */
+.font-display-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* Minimalist Meter Progress Bar */
+.minimal-meter {
+  height: 4px;
+  background-color: var(--surface-secondary);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.minimal-meter-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--text-primary);
+  transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
