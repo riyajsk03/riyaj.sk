@@ -6,11 +6,9 @@ import {
   ArrowRight,
   LogOut,
   CheckCircle,
-  Key,
   ExternalLink,
   Copy,
   Check,
-  AlertCircle,
   ShieldAlert
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -22,15 +20,12 @@ export const AdminAuthModal: React.FC = () => {
     isAdmin,
     adminUser,
     loginWithGoogleFirebase,
-    loginWithPasscode,
     logout,
     setActivePage
   } = usePortfolio();
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [passcode, setPasscode] = useState<string>('');
-  const [passcodeError, setPasscodeError] = useState<string | null>(null);
   const [copiedDomain, setCopiedDomain] = useState<boolean>(false);
 
   if (!isAdminModalOpen) return null;
@@ -60,22 +55,6 @@ export const AdminAuthModal: React.FC = () => {
       setError(err?.message || 'Failed to sign in.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handlePasscodeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPasscodeError(null);
-    if (!passcode.trim()) {
-      setPasscodeError('Please enter the master security key.');
-      return;
-    }
-    const res = loginWithPasscode(passcode);
-    if (res.success) {
-      setIsAdminModalOpen(false);
-      setActivePage('admin');
-    } else {
-      setPasscodeError(res.error || 'Invalid passcode.');
     }
   };
 
@@ -193,7 +172,7 @@ export const AdminAuthModal: React.FC = () => {
               )}
 
               {/* Continue with Google Button */}
-              <div className="pt-1 space-y-3">
+              <div className="pt-1 space-y-2.5">
                 <button
                   onClick={handleContinueWithGoogle}
                   disabled={loading}
@@ -220,47 +199,9 @@ export const AdminAuthModal: React.FC = () => {
                   <span>{loading ? 'Verifying with Google...' : 'Continue with Google'}</span>
                 </button>
 
-                {/* Divider */}
-                <div className="relative flex items-center justify-center pt-1">
-                  <div className="border-t border-[var(--border)] w-full" />
-                  <span className="bg-[var(--surface)] px-2.5 text-[10px] font-mono text-[var(--text-tertiary)] uppercase tracking-wider shrink-0">
-                    OR MASTER PASSCODE
-                  </span>
-                  <div className="border-t border-[var(--border)] w-full" />
-                </div>
-
-                {/* Master Passcode Form */}
-                <form onSubmit={handlePasscodeSubmit} className="space-y-2">
-                  <div className="relative">
-                    <Key className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
-                    <input
-                      type="password"
-                      value={passcode}
-                      onChange={(e) => setPasscode(e.target.value)}
-                      placeholder="Master key (e.g. riyaj-admin-2025)"
-                      className="w-full rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] pl-9 pr-3 py-2 text-xs text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-hidden focus:border-[var(--border-strong)] transition-colors"
-                    />
-                  </div>
-
-                  {passcodeError && (
-                    <div className="text-[10.5px] font-mono text-[var(--accent-red)] flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3 shrink-0" />
-                      <span>{passcodeError}</span>
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="btn-outline w-full py-2 text-xs font-semibold cursor-pointer hover:border-[var(--border-strong)] flex items-center justify-center gap-1.5"
-                  >
-                    <Key className="w-3.5 h-3.5" />
-                    <span>Verify with Security Key</span>
-                  </button>
-                </form>
-
                 <button
                   onClick={handleGoToAdminPage}
-                  className="btn-outline w-full text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer mt-1"
+                  className="btn-outline w-full text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
                   Open Admin Page directly
                 </button>

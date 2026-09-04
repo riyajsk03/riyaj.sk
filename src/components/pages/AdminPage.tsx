@@ -26,7 +26,6 @@ import {
   Sparkles,
   LogOut,
   AlertCircle,
-  Key,
   Copy
 } from 'lucide-react';
 import { Experience, SkillCategory, Project, Certificate, BlogPost } from '../../types';
@@ -39,7 +38,6 @@ export const AdminPage: React.FC = () => {
     adminUser,
     isAuthChecking,
     loginWithGoogleFirebase,
-    loginWithPasscode,
     logout,
     setActivePage,
     updateProfile,
@@ -65,10 +63,7 @@ export const AdminPage: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
-  const [passcode, setPasscode] = useState<string>('');
-  const [passcodeError, setPasscodeError] = useState<string | null>(null);
   const [copiedDomain, setCopiedDomain] = useState<boolean>(false);
-  const [showDomainGuide, setShowDomainGuide] = useState<boolean>(true);
 
   // Profile Form State
   const [profileForm, setProfileForm] = useState(data.profile);
@@ -134,20 +129,6 @@ export const AdminPage: React.FC = () => {
     showNotification('Profile and credentials updated in Firebase Firestore!');
   };
 
-  // Handle Passcode Login
-  const handlePasscodeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPasscodeError(null);
-    if (!passcode.trim()) {
-      setPasscodeError('Please enter the master security key.');
-      return;
-    }
-    const res = loginWithPasscode(passcode);
-    if (!res.success) {
-      setPasscodeError(res.error || 'Invalid passcode.');
-    }
-  };
-
   const currentDomain = typeof window !== 'undefined' ? window.location.hostname : 'riyajsk.vercel.app';
 
   const handleCopyDomain = () => {
@@ -189,7 +170,7 @@ export const AdminPage: React.FC = () => {
               </h1>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-              This management page is strictly restricted. Only the portfolio owner (<span className="font-mono font-medium text-[var(--text-primary)]">xriyajsk@gmail.com</span>) can authenticate, verify identity, and update live Firebase Firestore data.
+              This management page is strictly restricted. Only the portfolio owner (<span className="font-mono font-medium text-[var(--text-primary)]">xriyajsk@gmail.com</span>) can authenticate, verify identity with Google, and update live Firebase Firestore data.
             </p>
           </div>
 
@@ -261,7 +242,7 @@ export const AdminPage: React.FC = () => {
           )}
 
           {/* Primary Method: Sign in with Google */}
-          <div className="pt-1 space-y-4">
+          <div className="pt-1 space-y-3">
             <button
               onClick={handleSignIn}
               disabled={isAuthenticating}
@@ -287,49 +268,6 @@ export const AdminPage: React.FC = () => {
               </svg>
               <span>{isAuthenticating ? 'Verifying with Google...' : 'Sign in with Google (xriyajsk@gmail.com)'}</span>
             </button>
-
-            {/* Divider */}
-            <div className="relative flex items-center justify-center">
-              <div className="border-t border-[var(--border)] w-full" />
-              <span className="bg-[var(--surface)] px-3 text-[10.5px] font-mono text-[var(--text-tertiary)] uppercase tracking-wider shrink-0">
-                OR Instant Passcode Access
-              </span>
-              <div className="border-t border-[var(--border)] w-full" />
-            </div>
-
-            {/* Fallback Master Passcode Access */}
-            <form onSubmit={handlePasscodeSubmit} className="space-y-3">
-              <div className="space-y-1.5">
-                <label className="block text-[11px] font-medium text-[var(--text-secondary)]">
-                  Master Admin Security Key
-                </label>
-                <div className="relative">
-                  <Key className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
-                  <input
-                    type="password"
-                    value={passcode}
-                    onChange={(e) => setPasscode(e.target.value)}
-                    placeholder="Enter security key (e.g. riyaj-admin-2025)"
-                    className="w-full rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] pl-10 pr-4 py-2.5 text-xs text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-hidden focus:border-[var(--border-strong)] transition-colors"
-                  />
-                </div>
-              </div>
-
-              {passcodeError && (
-                <div className="text-[11px] font-mono text-[var(--accent-red)] flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{passcodeError}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="btn-outline w-full py-2.5 text-xs font-semibold cursor-pointer hover:border-[var(--border-strong)] flex items-center justify-center gap-2"
-              >
-                <Key className="w-3.5 h-3.5" />
-                <span>Verify with Security Key</span>
-              </button>
-            </form>
 
             <div className="pt-2 text-center">
               <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono text-[var(--text-tertiary)]">
