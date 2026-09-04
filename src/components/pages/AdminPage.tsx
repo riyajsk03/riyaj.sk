@@ -91,7 +91,7 @@ export const AdminPage: React.FC = () => {
 
   const showNotification = (msg: string) => {
     setSaveSuccess(msg);
-    setTimeout(() => setSaveSuccess(null), 3500);
+    setTimeout(() => setSaveSuccess(null), 3000);
   };
 
   const handleSignIn = async () => {

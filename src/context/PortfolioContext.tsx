@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import {
   PortfolioData,
   Profile,
@@ -124,7 +124,23 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessageState] = useState<string | null>(null);
+  const statusTimerRef = useRef<any>(null);
+
+  // Keep pop-up notifications visible for 3 seconds before auto-dismissing
+  const setStatusMessage = useCallback((msg: string | null) => {
+    if (statusTimerRef.current) {
+      clearTimeout(statusTimerRef.current);
+      statusTimerRef.current = null;
+    }
+    setStatusMessageState(msg);
+    if (msg) {
+      statusTimerRef.current = setTimeout(() => {
+        setStatusMessageState(null);
+        statusTimerRef.current = null;
+      }, 3000);
+    }
+  }, []);
 
   // Multi-page navigation state
   const [activePage, setActivePageState] = useState<PageId>(() => {
