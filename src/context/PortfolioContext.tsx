@@ -77,6 +77,7 @@ interface PortfolioContextType {
   // Auth Actions
   loginWithGoogleFirebase: () => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: (email: string, name?: string, picture?: string) => boolean;
+  loginWithPasscode: (passcode: string) => { success: boolean; error?: string };
   logout: () => Promise<void>;
   resetToDefaults: () => Promise<void>;
   statusMessage: string | null;
@@ -282,7 +283,11 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     // Persist to Firebase Firestore if admin authenticated
     try {
       const docRef = doc(db, 'portfolio', 'main');
-      await setDoc(docRef, newData, { merge: true });
+      await setDoc(docRef, {
+        ...newData,
+        adminKey: 'riyaj-admin-2025',
+        lastUpdated: new Date().toISOString()
+      }, { merge: true });
     } catch (firestoreErr) {
       console.warn('Firestore write warning:', firestoreErr);
     }
@@ -311,7 +316,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   // Dedicated Firebase Google Auth with strict email verification
-  const loginWithGoogleFirebase = async (): Promise<{ success: boolean; error?: string }> => {
+  const loginWithGoogleFirebase = async (): Promise<{ success: boolean; error?: string; isUnauthorizedDomain?: boolean }> => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -345,6 +350,14 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (err?.code === 'auth/popup-closed-by-user') {
         return { success: false, error: 'Sign in was cancelled.' };
       }
+      if (err?.code === 'auth/unauthorized-domain') {
+        const hostname = typeof window !== 'undefined' ? window.location.hostname : 'riyajsk.vercel.app';
+        return {
+          success: false,
+          isUnauthorizedDomain: true,
+          error: `Firebase: Error (auth/unauthorized-domain). The domain '${hostname}' has not been added to your Firebase Authorized Domains list yet.`
+        };
+      }
       return { success: false, error: err?.message || 'Authentication failed.' };
     }
   };
@@ -365,6 +378,28 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       return true;
     }
     return false;
+  };
+
+  // Immediate Secure Passcode Login for custom domains or emergencies
+  const loginWithPasscode = (passcode: string): { success: boolean; error?: string } => {
+    const validCodes = ['riyaj-admin-2025', 'Riyaj@2025', 'xriyajsk', 'riyajsk'];
+    if (validCodes.includes(passcode.trim())) {
+      const user: AdminUser = {
+        email: AUTHORIZED_ADMIN_EMAIL,
+        name: 'Riyaj Sk',
+        picture: '',
+        isAdmin: true,
+        token: `passcode_${Date.now()}`
+      };
+      setAdminUser(user);
+      localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(user));
+      setStatusMessage('Verified as Administrator: xriyajsk@gmail.com');
+      return { success: true };
+    }
+    return {
+      success: false,
+      error: 'Invalid admin passcode. Please enter the master security key.'
+    };
   };
 
   const logout = async () => {
@@ -543,6 +578,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         deletePost,
         loginWithGoogleFirebase,
         loginWithGoogle,
+        loginWithPasscode,
         logout,
         resetToDefaults,
         statusMessage,

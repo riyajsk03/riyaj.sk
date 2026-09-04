@@ -25,7 +25,9 @@ import {
   CloudCheck,
   Sparkles,
   LogOut,
-  AlertCircle
+  AlertCircle,
+  Key,
+  Copy
 } from 'lucide-react';
 import { Experience, SkillCategory, Project, Certificate, BlogPost } from '../../types';
 
@@ -37,6 +39,7 @@ export const AdminPage: React.FC = () => {
     adminUser,
     isAuthChecking,
     loginWithGoogleFirebase,
+    loginWithPasscode,
     logout,
     setActivePage,
     updateProfile,
@@ -62,6 +65,10 @@ export const AdminPage: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+  const [passcode, setPasscode] = useState<string>('');
+  const [passcodeError, setPasscodeError] = useState<string | null>(null);
+  const [copiedDomain, setCopiedDomain] = useState<boolean>(false);
+  const [showDomainGuide, setShowDomainGuide] = useState<boolean>(true);
 
   // Profile Form State
   const [profileForm, setProfileForm] = useState(data.profile);
@@ -127,11 +134,39 @@ export const AdminPage: React.FC = () => {
     showNotification('Profile and credentials updated in Firebase Firestore!');
   };
 
+  // Handle Passcode Login
+  const handlePasscodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasscodeError(null);
+    if (!passcode.trim()) {
+      setPasscodeError('Please enter the master security key.');
+      return;
+    }
+    const res = loginWithPasscode(passcode);
+    if (!res.success) {
+      setPasscodeError(res.error || 'Invalid passcode.');
+    }
+  };
+
+  const currentDomain = typeof window !== 'undefined' ? window.location.hostname : 'riyajsk.vercel.app';
+
+  const handleCopyDomain = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(currentDomain);
+      setCopiedDomain(true);
+      setTimeout(() => setCopiedDomain(false), 2500);
+    }
+  };
+
+  const isUnauthorizedDomain = Boolean(
+    authError && (authError.includes('auth/unauthorized-domain') || authError.includes('unauthorized-domain'))
+  );
+
   // IF NOT AUTHENTICATED OR NOT RIYAJ SK: Render the dedicated login gate
   if (!isAdmin) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] p-8 sm:p-10 shadow-2xl relative space-y-6">
+        <div className="w-full max-w-lg rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] p-7 sm:p-9 shadow-2xl relative space-y-6">
           {/* Back button to Home */}
           <button
             onClick={() => setActivePage('home')}
@@ -150,26 +185,87 @@ export const AdminPage: React.FC = () => {
                 Administrative Portal
               </span>
               <h1 className="font-display-title text-2xl font-bold text-[var(--text-primary)] mt-1">
-                Restricted Admin Page
+                Admin Authentication
               </h1>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-              This management page is strictly restricted. Only the authorized account owner (<span className="font-mono font-medium text-[var(--text-primary)]">xriyajsk@gmail.com</span>) can authenticate, verify identity, and manage live Firebase data.
+              This management page is strictly restricted. Only the portfolio owner (<span className="font-mono font-medium text-[var(--text-primary)]">xriyajsk@gmail.com</span>) can authenticate, verify identity, and update live Firebase Firestore data.
             </p>
           </div>
 
-          {authError && (
-            <div className="p-3.5 rounded-xl bg-[var(--accent-red-subtle)] border border-[var(--accent-red)]/20 text-[var(--accent-red)] text-xs font-mono flex items-start gap-2.5">
-              <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">{authError}</span>
+          {/* Special Resolution Box for Firebase auth/unauthorized-domain */}
+          {isUnauthorizedDomain ? (
+            <div className="p-4 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-strong)] space-y-3 text-xs">
+              <div className="flex items-center gap-2 text-[var(--accent-red)] font-semibold text-xs">
+                <ShieldAlert className="w-4 h-4 shrink-0" />
+                <span>Domain Not Authorized in Firebase</span>
+              </div>
+              <p className="text-[var(--text-secondary)] leading-relaxed">
+                Firebase Authentication has blocked Google Sign-In because <strong className="text-[var(--text-primary)] font-mono">{currentDomain}</strong> is not yet whitelisted in your Firebase project (<span className="font-mono text-[11px]">gen-lang-client-0166711316</span>).
+              </p>
+
+              {/* 3-Step Fix */}
+              <div className="p-3 rounded-lg bg-[var(--surface)] border border-[var(--border)] space-y-2 font-mono text-[11px]">
+                <div className="font-sans font-bold text-[11px] text-[var(--text-primary)] uppercase tracking-wider">
+                  Quick 1-Minute Fix:
+                </div>
+                <ol className="list-decimal list-inside space-y-1 text-[var(--text-secondary)]">
+                  <li>
+                    Open{' '}
+                    <a
+                      href="https://console.firebase.google.com/project/gen-lang-client-0166711316/authentication/settings"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--text-primary)] underline font-medium inline-flex items-center gap-0.5"
+                    >
+                      <span>Firebase Auth Settings</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </li>
+                  <li>
+                    Scroll down to <strong className="text-[var(--text-primary)]">Authorized domains</strong> and click <strong className="text-[var(--text-primary)]">Add domain</strong>
+                  </li>
+                  <li>
+                    Paste <code className="px-1.5 py-0.5 rounded bg-[var(--surface-secondary)] text-[var(--text-primary)] font-semibold">{currentDomain}</code> and click <strong className="text-[var(--text-primary)]">Add</strong>
+                  </li>
+                </ol>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handleCopyDomain}
+                  className="btn-outline text-xs py-1.5 px-3 flex-1 flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  {copiedDomain ? <Check className="w-3.5 h-3.5 text-[var(--accent-green)]" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedDomain ? 'Copied Domain!' : `Copy '${currentDomain}'`}</span>
+                </button>
+                <a
+                  href="https://console.firebase.google.com/project/gen-lang-client-0166711316/authentication/settings"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary text-xs py-1.5 px-3 flex-1 flex items-center justify-center gap-1.5 text-center"
+                >
+                  <span>Open Firebase Settings</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </div>
+          ) : (
+            authError && (
+              <div className="p-3.5 rounded-xl bg-[var(--accent-red-subtle)] border border-[var(--accent-red)]/20 text-[var(--accent-red)] text-xs font-mono flex items-start gap-2.5">
+                <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+                <span className="leading-relaxed">{authError}</span>
+              </div>
+            )
           )}
 
-          <div className="pt-2 space-y-3">
+          {/* Primary Method: Sign in with Google */}
+          <div className="pt-1 space-y-4">
             <button
               onClick={handleSignIn}
               disabled={isAuthenticating}
-              className="btn-primary w-full py-3 text-sm cursor-pointer disabled:opacity-50"
+              className="btn-primary w-full py-3 text-sm cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2.5"
             >
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path
@@ -191,6 +287,49 @@ export const AdminPage: React.FC = () => {
               </svg>
               <span>{isAuthenticating ? 'Verifying with Google...' : 'Sign in with Google (xriyajsk@gmail.com)'}</span>
             </button>
+
+            {/* Divider */}
+            <div className="relative flex items-center justify-center">
+              <div className="border-t border-[var(--border)] w-full" />
+              <span className="bg-[var(--surface)] px-3 text-[10.5px] font-mono text-[var(--text-tertiary)] uppercase tracking-wider shrink-0">
+                OR Instant Passcode Access
+              </span>
+              <div className="border-t border-[var(--border)] w-full" />
+            </div>
+
+            {/* Fallback Master Passcode Access */}
+            <form onSubmit={handlePasscodeSubmit} className="space-y-3">
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-medium text-[var(--text-secondary)]">
+                  Master Admin Security Key
+                </label>
+                <div className="relative">
+                  <Key className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
+                  <input
+                    type="password"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    placeholder="Enter security key (e.g. riyaj-admin-2025)"
+                    className="w-full rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] pl-10 pr-4 py-2.5 text-xs text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-hidden focus:border-[var(--border-strong)] transition-colors"
+                  />
+                </div>
+              </div>
+
+              {passcodeError && (
+                <div className="text-[11px] font-mono text-[var(--accent-red)] flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{passcodeError}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="btn-outline w-full py-2.5 text-xs font-semibold cursor-pointer hover:border-[var(--border-strong)] flex items-center justify-center gap-2"
+              >
+                <Key className="w-3.5 h-3.5" />
+                <span>Verify with Security Key</span>
+              </button>
+            </form>
 
             <div className="pt-2 text-center">
               <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono text-[var(--text-tertiary)]">

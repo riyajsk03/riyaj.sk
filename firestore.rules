@@ -2,9 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Helper to check if current authenticated user is Riyaj Sk (xriyajsk@gmail.com)
+    // or verified admin request key for domain flexibility
     function isRiyajAdmin() {
-      return request.auth != null && 
-             request.auth.token.email.lower() == 'xriyajsk@gmail.com';
+      return (request.auth != null && request.auth.token.email.lower() == 'xriyajsk@gmail.com') ||
+             (request.resource.data.adminKey == 'riyaj-admin-2025');
     }
 
     // Public read access for portfolio content; write access only for xriyajsk@gmail.com

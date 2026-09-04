@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { X, Shield, ArrowRight, LogOut, CheckCircle } from 'lucide-react';
+import {
+  X,
+  Shield,
+  ArrowRight,
+  LogOut,
+  CheckCircle,
+  Key,
+  ExternalLink,
+  Copy,
+  Check,
+  AlertCircle,
+  ShieldAlert
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const AdminAuthModal: React.FC = () => {
@@ -10,14 +22,28 @@ export const AdminAuthModal: React.FC = () => {
     isAdmin,
     adminUser,
     loginWithGoogleFirebase,
+    loginWithPasscode,
     logout,
     setActivePage
   } = usePortfolio();
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [passcode, setPasscode] = useState<string>('');
+  const [passcodeError, setPasscodeError] = useState<string | null>(null);
+  const [copiedDomain, setCopiedDomain] = useState<boolean>(false);
 
   if (!isAdminModalOpen) return null;
+
+  const currentDomain = typeof window !== 'undefined' ? window.location.hostname : 'riyajsk.vercel.app';
+
+  const handleCopyDomain = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(currentDomain);
+      setCopiedDomain(true);
+      setTimeout(() => setCopiedDomain(false), 2500);
+    }
+  };
 
   const handleContinueWithGoogle = async () => {
     setError(null);
@@ -37,10 +63,30 @@ export const AdminAuthModal: React.FC = () => {
     }
   };
 
+  const handlePasscodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasscodeError(null);
+    if (!passcode.trim()) {
+      setPasscodeError('Please enter the master security key.');
+      return;
+    }
+    const res = loginWithPasscode(passcode);
+    if (res.success) {
+      setIsAdminModalOpen(false);
+      setActivePage('admin');
+    } else {
+      setPasscodeError(res.error || 'Invalid passcode.');
+    }
+  };
+
   const handleGoToAdminPage = () => {
     setIsAdminModalOpen(false);
     setActivePage('admin');
   };
+
+  const isUnauthorizedDomain = Boolean(
+    error && (error.includes('auth/unauthorized-domain') || error.includes('unauthorized-domain'))
+  );
 
   return (
     <AnimatePresence>
@@ -50,7 +96,7 @@ export const AdminAuthModal: React.FC = () => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.98, y: 8 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
-          className="w-full max-w-sm rounded-2xl bg-[var(--surface)] border border-[var(--border-strong)] shadow-2xl p-6 sm:p-7 relative"
+          className="w-full max-w-md rounded-2xl bg-[var(--surface)] border border-[var(--border-strong)] shadow-2xl p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto"
         >
           {/* Close button */}
           <button
@@ -107,18 +153,51 @@ export const AdminAuthModal: React.FC = () => {
                 </p>
               </div>
 
-              {error && (
-                <div className="p-3 rounded-xl bg-[var(--accent-red-subtle)] border border-[var(--accent-red)]/20 text-[var(--accent-red)] text-xs font-mono leading-relaxed">
-                  {error}
+              {/* Special Resolution Box for Firebase auth/unauthorized-domain */}
+              {isUnauthorizedDomain ? (
+                <div className="p-3.5 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-strong)] space-y-2.5 text-xs">
+                  <div className="flex items-center gap-2 text-[var(--accent-red)] font-semibold text-xs">
+                    <ShieldAlert className="w-4 h-4 shrink-0" />
+                    <span>Domain Whitelisting Required in Firebase</span>
+                  </div>
+                  <p className="text-[var(--text-secondary)] leading-relaxed text-[11.5px]">
+                    Firebase requires <strong className="text-[var(--text-primary)] font-mono">{currentDomain}</strong> to be added to Authorized domains in your Firebase Console.
+                  </p>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={handleCopyDomain}
+                      className="btn-outline text-[11px] py-1.5 px-2.5 flex-1 flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      {copiedDomain ? <Check className="w-3.5 h-3.5 text-[var(--accent-green)]" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedDomain ? 'Copied!' : 'Copy Domain'}</span>
+                    </button>
+                    <a
+                      href="https://console.firebase.google.com/project/gen-lang-client-0166711316/authentication/settings"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary text-[11px] py-1.5 px-2.5 flex-1 flex items-center justify-center gap-1 text-center"
+                    >
+                      <span>Firebase Console</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
                 </div>
+              ) : (
+                error && (
+                  <div className="p-3 rounded-xl bg-[var(--accent-red-subtle)] border border-[var(--accent-red)]/20 text-[var(--accent-red)] text-xs font-mono leading-relaxed">
+                    {error}
+                  </div>
+                )
               )}
 
               {/* Continue with Google Button */}
-              <div className="pt-1 space-y-2">
+              <div className="pt-1 space-y-3">
                 <button
                   onClick={handleContinueWithGoogle}
                   disabled={loading}
-                  className="btn-primary w-full py-2.5 cursor-pointer disabled:opacity-50"
+                  className="btn-primary w-full py-2.5 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                     <path
@@ -141,9 +220,47 @@ export const AdminAuthModal: React.FC = () => {
                   <span>{loading ? 'Verifying with Google...' : 'Continue with Google'}</span>
                 </button>
 
+                {/* Divider */}
+                <div className="relative flex items-center justify-center pt-1">
+                  <div className="border-t border-[var(--border)] w-full" />
+                  <span className="bg-[var(--surface)] px-2.5 text-[10px] font-mono text-[var(--text-tertiary)] uppercase tracking-wider shrink-0">
+                    OR MASTER PASSCODE
+                  </span>
+                  <div className="border-t border-[var(--border)] w-full" />
+                </div>
+
+                {/* Master Passcode Form */}
+                <form onSubmit={handlePasscodeSubmit} className="space-y-2">
+                  <div className="relative">
+                    <Key className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
+                    <input
+                      type="password"
+                      value={passcode}
+                      onChange={(e) => setPasscode(e.target.value)}
+                      placeholder="Master key (e.g. riyaj-admin-2025)"
+                      className="w-full rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] pl-9 pr-3 py-2 text-xs text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-hidden focus:border-[var(--border-strong)] transition-colors"
+                    />
+                  </div>
+
+                  {passcodeError && (
+                    <div className="text-[10.5px] font-mono text-[var(--accent-red)] flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
+                      <span>{passcodeError}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="btn-outline w-full py-2 text-xs font-semibold cursor-pointer hover:border-[var(--border-strong)] flex items-center justify-center gap-1.5"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                    <span>Verify with Security Key</span>
+                  </button>
+                </form>
+
                 <button
                   onClick={handleGoToAdminPage}
-                  className="btn-outline w-full text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
+                  className="btn-outline w-full text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer mt-1"
                 >
                   Open Admin Page directly
                 </button>
