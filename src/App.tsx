@@ -13,6 +13,7 @@ import { AdminAuthModal } from './components/AdminAuthModal';
 import { ProjectModal } from './components/ProjectModal';
 import { BlogModal } from './components/BlogModal';
 import { InteractiveTerminal } from './components/InteractiveTerminal';
+import { LaunchScreen } from './components/LaunchScreen';
 
 const AppContent: React.FC = () => {
   const { activePage, statusMessage, setStatusMessage } = usePortfolio();
@@ -49,6 +50,9 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-[var(--bg)] text-[var(--text-primary)] transition-colors duration-200">
+      {/* Website Initial Launch Screen */}
+      <LaunchScreen />
+
       {/* Toast Notification (stays for 3 seconds) */}
       <AnimatePresence>
         {statusMessage && (

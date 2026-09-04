@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { usePortfolio } from '../../context/PortfolioContext';
+import { AnimatedSaveButton } from '../AnimatedSaveButton';
 import {
   ShieldCheck,
   ShieldAlert,
@@ -65,6 +67,12 @@ export const AdminPage: React.FC = () => {
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
   const [copiedDomain, setCopiedDomain] = useState<boolean>(false);
 
+  // Animated Save States
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isProfileSaved, setIsProfileSaved] = useState(false);
+  const [isSavingModal, setIsSavingModal] = useState(false);
+  const [isModalSaved, setIsModalSaved] = useState(false);
+
   // Profile Form State
   const [profileForm, setProfileForm] = useState(data.profile);
 
@@ -125,8 +133,17 @@ export const AdminPage: React.FC = () => {
   // Save Profile
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateProfile(profileForm);
-    showNotification('Profile and credentials updated in Firebase Firestore!');
+    setIsSavingProfile(true);
+    try {
+      await updateProfile(profileForm);
+      setIsSavingProfile(false);
+      setIsProfileSaved(true);
+      showNotification('Profile and credentials updated in Firebase Firestore!');
+      setTimeout(() => setIsProfileSaved(false), 2500);
+    } catch (err) {
+      setIsSavingProfile(false);
+      showNotification('Error saving profile changes.');
+    }
   };
 
   const currentDomain = typeof window !== 'undefined' ? window.location.hostname : 'riyajsk.vercel.app';
@@ -147,7 +164,12 @@ export const AdminPage: React.FC = () => {
   if (!isAdmin) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-lg rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] p-7 sm:p-9 shadow-2xl relative space-y-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="w-full max-w-lg rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] p-7 sm:p-9 shadow-2xl relative space-y-6"
+        >
           {/* Back button to Home */}
           <button
             onClick={() => setActivePage('home')}
@@ -158,9 +180,13 @@ export const AdminPage: React.FC = () => {
           </button>
 
           <div className="space-y-3 pt-2">
-            <div className="w-12 h-12 rounded-full bg-[var(--surface-secondary)] border border-[var(--border)] flex items-center justify-center text-[var(--text-primary)]">
+            <motion.div
+              animate={{ y: [0, -4, 0], scale: [1, 1.04, 1] }}
+              transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
+              className="w-12 h-12 rounded-full bg-[var(--surface-secondary)] border border-[var(--border)] flex items-center justify-center text-[var(--text-primary)] shadow-sm"
+            >
               <Lock className="w-5 h-5" />
-            </div>
+            </motion.div>
             <div>
               <span className="font-eyebrow text-[10.5px] font-bold text-[var(--text-tertiary)] uppercase tracking-[0.2em] block">
                 Administrative Portal
@@ -170,15 +196,19 @@ export const AdminPage: React.FC = () => {
               </h1>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-              This management page is strictly restricted. Only the portfolio owner (<span className="font-mono font-medium text-[var(--text-primary)]">xriyajsk@gmail.com</span>) can authenticate, verify identity with Google, and update live Firebase Firestore data.
+              This management page is strictly restricted. Only the portfolio owner (<span className="font-semibold text-[var(--text-primary)]">Riyaj Sk</span>) can authenticate, verify identity with Google, and update live Firebase Firestore data.
             </p>
           </div>
 
           {/* Special Resolution Box for Firebase auth/unauthorized-domain */}
           {isUnauthorizedDomain ? (
-            <div className="p-4 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-strong)] space-y-3 text-xs">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="p-4 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-strong)] space-y-3 text-xs"
+            >
               <div className="flex items-center gap-2 text-[var(--accent-red)] font-semibold text-xs">
-                <ShieldAlert className="w-4 h-4 shrink-0" />
+                <ShieldAlert className="w-4 h-4 shrink-0 animate-bounce" />
                 <span>Domain Not Authorized in Firebase</span>
               </div>
               <p className="text-[var(--text-secondary)] leading-relaxed">
@@ -228,46 +258,64 @@ export const AdminPage: React.FC = () => {
                   className="btn-primary text-xs py-1.5 px-3 flex-1 flex items-center justify-center gap-1.5 text-center"
                 >
                   <span>Open Firebase Settings</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
-            </div>
+            </motion.div>
           ) : (
             authError && (
-              <div className="p-3.5 rounded-xl bg-[var(--accent-red-subtle)] border border-[var(--accent-red)]/20 text-[var(--accent-red)] text-xs font-mono flex items-start gap-2.5">
+              <motion.div
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: [0, -6, 6, -3, 3, 0] }}
+                transition={{ duration: 0.35 }}
+                className="p-3.5 rounded-xl bg-[var(--accent-red-subtle)] border border-[var(--accent-red)]/20 text-[var(--accent-red)] text-xs font-mono flex items-start gap-2.5"
+              >
                 <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
                 <span className="leading-relaxed">{authError}</span>
-              </div>
+              </motion.div>
             )
           )}
 
           {/* Primary Method: Sign in with Google */}
           <div className="pt-1 space-y-3">
-            <button
+            <motion.button
+              whileHover={!isAuthenticating ? { scale: 1.02, y: -1 } : undefined}
+              whileTap={!isAuthenticating ? { scale: 0.98, y: 1 } : undefined}
               onClick={handleSignIn}
               disabled={isAuthenticating}
-              className="btn-primary w-full py-3 text-sm cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2.5"
+              className="relative overflow-hidden btn-primary w-full py-3 text-sm cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2.5 shadow-md group"
             >
-              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              {/* Shimmer light effect */}
+              <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent pointer-events-none -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+
+              {isAuthenticating ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                  className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full shrink-0"
                 />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                />
-              </svg>
-              <span>{isAuthenticating ? 'Verifying with Google...' : 'Sign in with Google (xriyajsk@gmail.com)'}</span>
-            </button>
+              ) : (
+                <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+              )}
+              <span>{isAuthenticating ? 'Verifying with Google...' : 'Sign in with Google (Riyaj Sk)'}</span>
+            </motion.button>
 
             <div className="pt-2 text-center">
               <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono text-[var(--text-tertiary)]">
@@ -276,12 +324,12 @@ export const AdminPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
-  // AUTHENTICATED AS xriyajsk@gmail.com - Full Admin Panel Page
+  // AUTHENTICATED AS Riyaj Sk - Full Admin Panel Page
   return (
     <div className="space-y-10 max-w-5xl mx-auto pb-16">
       {/* Top Banner Navigation */}
@@ -307,7 +355,7 @@ export const AdminPage: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-[var(--text-secondary)] pt-1">
             <span className="flex items-center gap-1 text-[var(--accent-green)] font-medium">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Verified: {adminUser?.email}</span>
+              <span>Verified: {adminUser?.displayName || 'Riyaj Sk'}</span>
             </span>
             <span>·</span>
             <span className="flex items-center gap-1 text-[var(--text-tertiary)]">
@@ -512,13 +560,14 @@ export const AdminPage: React.FC = () => {
             />
           </div>
 
-          <button
+          <AnimatedSaveButton
             type="submit"
-            className="btn-primary"
-          >
-            <Save className="w-4 h-4" />
-            <span>Save Profile to Firebase</span>
-          </button>
+            isSaving={isSavingProfile}
+            isSaved={isProfileSaved}
+            label="Save Profile to Firebase"
+            savingLabel="Saving Profile to Firestore..."
+            savedLabel="Profile Saved to Firestore!"
+          />
         </form>
       )}
 
@@ -681,21 +730,33 @@ export const AdminPage: React.FC = () => {
                         bullets
                       };
 
-                      if (editingExp) {
-                        await updateExperience(editingExp.id, expData);
-                        showNotification('Experience updated in Firebase');
-                      } else {
-                        await addExperience(expData);
-                        showNotification('Experience created in Firebase');
+                      setIsSavingModal(true);
+                      try {
+                        if (editingExp) {
+                          await updateExperience(editingExp.id, expData);
+                          showNotification('Experience updated in Firebase');
+                        } else {
+                          await addExperience(expData);
+                          showNotification('Experience created in Firebase');
+                        }
+                        setIsModalSaved(true);
+                        setTimeout(() => {
+                          setIsModalSaved(false);
+                          setIsSavingModal(false);
+                          setIsAddingExp(false);
+                          setEditingExp(null);
+                        }, 500);
+                      } catch {
+                        setIsSavingModal(false);
                       }
-
-                      setIsAddingExp(false);
-                      setEditingExp(null);
                     }}
-                    className="btn-primary text-xs"
-                  >
-                    Save
-                  </button>
+                    isSaving={isSavingModal}
+                    isSaved={isModalSaved}
+                    label="Save Experience"
+                    savingLabel="Saving..."
+                    savedLabel="Saved!"
+                    className="text-xs py-1 px-3"
+                  />
                 </div>
               </div>
             </div>
@@ -827,21 +888,33 @@ export const AdminPage: React.FC = () => {
                         category
                       };
 
-                      if (editingSkill) {
-                        await updateSkill(editingSkill.id, skillData);
-                        showNotification('Skill updated in Firebase');
-                      } else {
-                        await addSkill(skillData);
-                        showNotification('Skill added to Firebase');
+                      setIsSavingModal(true);
+                      try {
+                        if (editingSkill) {
+                          await updateSkill(editingSkill.id, skillData);
+                          showNotification('Skill updated in Firebase');
+                        } else {
+                          await addSkill(skillData);
+                          showNotification('Skill added to Firebase');
+                        }
+                        setIsModalSaved(true);
+                        setTimeout(() => {
+                          setIsModalSaved(false);
+                          setIsSavingModal(false);
+                          setIsAddingSkill(false);
+                          setEditingSkill(null);
+                        }, 500);
+                      } catch {
+                        setIsSavingModal(false);
                       }
-
-                      setIsAddingSkill(false);
-                      setEditingSkill(null);
                     }}
-                    className="btn-primary text-xs"
-                  >
-                    Save
-                  </button>
+                    isSaving={isSavingModal}
+                    isSaved={isModalSaved}
+                    label="Save Skill"
+                    savingLabel="Saving..."
+                    savedLabel="Saved!"
+                    className="text-xs py-1 px-3"
+                  />
                 </div>
               </div>
             </div>
@@ -1027,21 +1100,33 @@ export const AdminPage: React.FC = () => {
                         featured: editingProj?.featured ?? true
                       };
 
-                      if (editingProj) {
-                        await updateProject(editingProj.id, projData);
-                        showNotification('Project updated in Firebase');
-                      } else {
-                        await addProject(projData);
-                        showNotification('Project added to Firebase');
+                      setIsSavingModal(true);
+                      try {
+                        if (editingProj) {
+                          await updateProject(editingProj.id, projData);
+                          showNotification('Project updated in Firebase');
+                        } else {
+                          await addProject(projData);
+                          showNotification('Project added to Firebase');
+                        }
+                        setIsModalSaved(true);
+                        setTimeout(() => {
+                          setIsModalSaved(false);
+                          setIsSavingModal(false);
+                          setIsAddingProj(false);
+                          setEditingProj(null);
+                        }, 500);
+                      } catch {
+                        setIsSavingModal(false);
                       }
-
-                      setIsAddingProj(false);
-                      setEditingProj(null);
                     }}
-                    className="btn-primary text-xs"
-                  >
-                    Save
-                  </button>
+                    isSaving={isSavingModal}
+                    isSaved={isModalSaved}
+                    label="Save Project"
+                    savingLabel="Saving..."
+                    savedLabel="Saved!"
+                    className="text-xs py-1 px-3"
+                  />
                 </div>
               </div>
             </div>
@@ -1181,21 +1266,33 @@ export const AdminPage: React.FC = () => {
                         credentialUrl
                       };
 
-                      if (editingCert) {
-                        await updateCertificate(editingCert.id, certData);
-                        showNotification('Certificate updated in Firebase');
-                      } else {
-                        await addCertificate(certData);
-                        showNotification('Certificate added to Firebase');
+                      setIsSavingModal(true);
+                      try {
+                        if (editingCert) {
+                          await updateCertificate(editingCert.id, certData);
+                          showNotification('Certificate updated in Firebase');
+                        } else {
+                          await addCertificate(certData);
+                          showNotification('Certificate added to Firebase');
+                        }
+                        setIsModalSaved(true);
+                        setTimeout(() => {
+                          setIsModalSaved(false);
+                          setIsSavingModal(false);
+                          setIsAddingCert(false);
+                          setEditingCert(null);
+                        }, 500);
+                      } catch {
+                        setIsSavingModal(false);
                       }
-
-                      setIsAddingCert(false);
-                      setEditingCert(null);
                     }}
-                    className="btn-primary text-xs"
-                  >
-                    Save
-                  </button>
+                    isSaving={isSavingModal}
+                    isSaved={isModalSaved}
+                    label="Save Credential"
+                    savingLabel="Saving..."
+                    savedLabel="Saved!"
+                    className="text-xs py-1 px-3"
+                  />
                 </div>
               </div>
             </div>
@@ -1329,21 +1426,33 @@ export const AdminPage: React.FC = () => {
                         published: true
                       };
 
-                      if (editingPost) {
-                        await updatePost(editingPost.id, postData);
-                        showNotification('Post updated in Firebase');
-                      } else {
-                        await addPost(postData);
-                        showNotification('Post created in Firebase');
+                      setIsSavingModal(true);
+                      try {
+                        if (editingPost) {
+                          await updatePost(editingPost.id, postData);
+                          showNotification('Post updated in Firebase');
+                        } else {
+                          await addPost(postData);
+                          showNotification('Post created in Firebase');
+                        }
+                        setIsModalSaved(true);
+                        setTimeout(() => {
+                          setIsModalSaved(false);
+                          setIsSavingModal(false);
+                          setIsAddingPost(false);
+                          setEditingPost(null);
+                        }, 500);
+                      } catch {
+                        setIsSavingModal(false);
                       }
-
-                      setIsAddingPost(false);
-                      setEditingPost(null);
                     }}
-                    className="btn-primary text-xs"
-                  >
-                    Save
-                  </button>
+                    isSaving={isSavingModal}
+                    isSaved={isModalSaved}
+                    label="Save Post"
+                    savingLabel="Saving..."
+                    savedLabel="Saved!"
+                    className="text-xs py-1 px-3"
+                  />
                 </div>
               </div>
             </div>
