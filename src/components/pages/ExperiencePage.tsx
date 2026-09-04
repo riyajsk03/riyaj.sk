@@ -1,8 +1,10 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
+import { Award, Sparkles, Mail, ArrowRight } from 'lucide-react';
+import { Breadcrumbs } from '../Breadcrumbs';
 
 export const ExperiencePage: React.FC = () => {
-  const { data } = usePortfolio();
+  const { data, setActivePage } = usePortfolio();
 
   const coreSkills = [
     { name: 'WhatsApp Chat & Email Support', pct: 99 },
@@ -14,14 +16,17 @@ export const ExperiencePage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 md:space-y-20">
-      {/* 1. Page Header */}
+    <div className="space-y-12 md:space-y-16">
+      {/* 1. Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'Experience & Skills' }]} />
+
+      {/* 2. Page Header */}
       <section className="space-y-4 max-w-3xl">
         <span className="font-eyebrow text-[11px] font-bold tracking-[0.18em] text-[var(--text-tertiary)] uppercase block">
           Career Timeline
         </span>
         <h1 className="font-display-title text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.08]">
-          Experience &amp; Skills
+          Work Experience &amp; Skills
         </h1>
         <p className="text-lg text-[var(--text-secondary)] leading-relaxed font-normal">
           Detailed breakdown of customer service operations, operational roles, and technical tools.
@@ -136,6 +141,34 @@ export const ExperiencePage: React.FC = () => {
               {tool}
             </span>
           ))}
+        </div>
+      </section>
+
+      {/* 5. Internal Links & Next Steps */}
+      <section className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+            Explore Credentials &amp; Creative Work
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            View 26 verified certifications across AI and cybersecurity, or check interactive web applications.
+          </p>
+        </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            onClick={() => setActivePage('certifications')}
+            className="btn-primary text-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Award className="w-3.5 h-3.5" />
+            <span>Certifications</span>
+          </button>
+          <button
+            onClick={() => setActivePage('work')}
+            className="btn-secondary text-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Web Work</span>
+          </button>
         </div>
       </section>
     </div>

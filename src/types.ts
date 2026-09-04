@@ -97,4 +97,4 @@ export interface AdminUser {
 
 export type ThemeMode = 'dark' | 'light';
 
-export type PageId = 'home' | 'about' | 'experience' | 'certifications' | 'work' | 'contact' | 'admin';
+export type PageId = 'home' | 'about' | 'experience' | 'certifications' | 'work' | 'contact' | 'admin' | 'not-found';

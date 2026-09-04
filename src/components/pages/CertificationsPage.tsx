@@ -1,10 +1,11 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { Check } from 'lucide-react';
+import { Check, Briefcase, Mail } from 'lucide-react';
 import { TiltCard } from '../TiltCard';
+import { Breadcrumbs } from '../Breadcrumbs';
 
 export const CertificationsPage: React.FC = () => {
-  const { data } = usePortfolio();
+  const { data, setActivePage } = usePortfolio();
 
   const aiTraining = [
     { title: 'AI Fundamentals', date: 'Jan 2026', provider: 'NextWave' },
@@ -48,8 +49,11 @@ export const CertificationsPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 md:space-y-20">
-      {/* 1. Page Header */}
+    <div className="space-y-12 md:space-y-16">
+      {/* 1. Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'Certifications' }]} />
+
+      {/* 2. Page Header */}
       <section className="space-y-3 max-w-3xl">
         <span className="font-eyebrow text-[11px] font-bold tracking-[0.18em] text-[var(--text-tertiary)] uppercase block">
           Credentials &amp; Standards
@@ -172,6 +176,34 @@ export const CertificationsPage: React.FC = () => {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* 6. Internal Links & Next Steps */}
+      <section className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+            Explore Professional Experience or Get in Touch
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            Review frontline customer service operations at Concentrix or reach out directly for opportunities.
+          </p>
+        </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            onClick={() => setActivePage('experience')}
+            className="btn-primary text-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Briefcase className="w-3.5 h-3.5" />
+            <span>Experience</span>
+          </button>
+          <button
+            onClick={() => setActivePage('contact')}
+            className="btn-secondary text-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Contact</span>
+          </button>
         </div>
       </section>
     </div>

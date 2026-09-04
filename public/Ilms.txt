@@ -1,0 +1,8 @@
+# Riyaj Sk — Portfolio & Technical Profile
+# Alias file for /llms.txt
+
+> Customer Service Representative & Web Builder based in Bangalore, Karnataka, India.
+> Website: https://riyajsk.vercel.app
+> Contact: xriyajsk@gmail.com | LinkedIn: https://linkedin.com/in/riyaj-sk-409605335 | GitHub: https://github.com/xriyajsk
+
+See full LLM markdown documentation at: https://riyajsk.vercel.app/llms.txt

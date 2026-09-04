@@ -1,0 +1,38 @@
+# Riyaj Sk — Portfolio & Technical Profile
+
+> Customer Service Representative & Web Builder based in Bangalore, Karnataka, India.
+> High-concurrency WhatsApp chat, corporate email triage, outbound resolution, and modern web application development.
+> Website: https://riyajsk.vercel.app
+> Contact: xriyajsk@gmail.com | LinkedIn: https://linkedin.com/in/riyaj-sk-409605335 | GitHub: https://github.com/xriyajsk
+
+## Core Professional Summary
+- **Current Position:** Customer Service Representative at Concentrix Service India Pvt. Ltd. (Bangalore) since August 2025.
+- **Queue Breakdown:** 80% digital queue focus (concurrent WhatsApp chats and emails) + 20% outbound voice customer resolution.
+- **Key Metrics:** 98.5% CSAT (Customer Satisfaction Target), 96% first-contact resolution, handling 3-4 simultaneous chat queues.
+- **Background:** Multi-Service Center Operations & Technical Assistant (West Bengal, 2023–2025). 150+ daily citizen service transactions, document verification, hardware troubleshooting.
+- **Languages:** English (Professional working proficiency), Hindi (Native fluency), Bengali (Mother tongue).
+
+## Key Skills & Systems
+- **CRM & Support Tools:** Infobip, Avaya, Marvin, Resolve Jiffy, Zimbra Mail, ConnectCX, QuickConnect, WorkforceCX, MS Excel (Microsoft 365).
+- **Core Competencies:** Active Listening, Ticket Triage, High-Concurrency Chat, Escalation Management, Data Privacy, Phishing Defense, Fraud Waste & Abuse Prevention.
+- **Web & Development Stack:** React 19, TypeScript, Vite, Tailwind CSS, Express, Node.js, Firebase (Firestore & Auth), YouTube IFrame API, Git.
+
+## Verified Credentials (26 Certifications)
+- **Emerging AI:** AI Fundamentals, Robotic Process Automation (RPA), Conversational AI Architecture, Generative AI Applications, Agentic AI Workflow Design (NextWave Academy), Digital Marketing with AI (IIDE).
+- **Security & InfoSec:** Annual InfoSec & Data Privacy Standards (2024-25, 2025-26), Social Engineering Defense 2026, Phishing Education (NHO), Fraud, Waste & Abuse Compliance (2024, 2026).
+- **Enterprise Operations:** ConnectCX User Functionalities, WorkforceCX WFM Scheduling, Account Admin Role, Excel Essential Training (Office 365), Diversity Equity & Inclusion.
+- **Government & Technical:** ADCA (Advanced Diploma in Computer Applications), Domestic Data Entry Operator (Skill India / NSDC).
+
+## Featured Projects & Creative Spaces
+- **MEHFIL (https://xmehfil.vercel.app/):** Multi-world ambient music and chat web application featuring Zero Cap, Bhojpuri Zone, Yaadon Ka Radio, and Moner Gaan. Built with React, Vite, Firebase Firestore, and YouTube API.
+- **Zero Cap:** Atmospheric lofi/ambient internet radio single-page application with live weather integration.
+- **Dhaba Radio:** 90s nostalgic Hindi cinema web radio concept synced to Indian Standard Time (IST).
+- **OmniQueue CRM Assistant:** Centralized multi-queue triage console with macros and response accelerators.
+
+## Page Sources & URLs
+- Home / Overview: https://riyajsk.vercel.app/
+- About Riyaj Sk: https://riyajsk.vercel.app/about
+- Work Experience: https://riyajsk.vercel.app/experience
+- Certifications: https://riyajsk.vercel.app/certifications
+- Web Work & Projects: https://riyajsk.vercel.app/work
+- Contact: https://riyajsk.vercel.app/contact

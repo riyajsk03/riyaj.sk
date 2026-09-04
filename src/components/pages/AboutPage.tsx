@@ -1,13 +1,17 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { Breadcrumbs } from '../Breadcrumbs';
 
 export const AboutPage: React.FC = () => {
   const { setActivePage } = usePortfolio();
 
   return (
-    <div className="space-y-16 md:space-y-20">
-      {/* 1. Header & Lead */}
+    <div className="space-y-12 md:space-y-16">
+      {/* 1. Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'About' }]} />
+
+      {/* 2. Header & Lead */}
       <section className="space-y-3 max-w-3xl">
         <span className="font-eyebrow text-[11px] font-bold tracking-[0.18em] text-[var(--text-tertiary)] uppercase block">
           Background &amp; Profile
@@ -20,7 +24,7 @@ export const AboutPage: React.FC = () => {
         </p>
       </section>
 
-      {/* 2. Narrative & Editorial Columns */}
+      {/* 3. Narrative & Editorial Columns */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 pt-4 border-t border-[var(--border)]">
         {/* Left Column: Narrative */}
         <div className="lg:col-span-8 space-y-6 text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
@@ -41,6 +45,13 @@ export const AboutPage: React.FC = () => {
             >
               <span>Work experience</span>
               <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setActivePage('work')}
+              className="btn-secondary flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Explore projects</span>
             </button>
             <button
               onClick={() => setActivePage('contact')}

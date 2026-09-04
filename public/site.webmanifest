@@ -1,0 +1,17 @@
+{
+  "name": "Riyaj Sk — Customer Service Rep & Web Builder",
+  "short_name": "Riyaj Sk",
+  "description": "Riyaj Sk — Customer Service Representative, BPO & Chat Support. Experience, core skills, AI certifications, and web projects.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { Search, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { Search, ArrowRight, ArrowUpRight, Briefcase, Mail } from 'lucide-react';
 import { TiltCard } from '../TiltCard';
+import { Breadcrumbs } from '../Breadcrumbs';
 
 export const WorkPage: React.FC = () => {
-  const { data, setSelectedProject } = usePortfolio();
+  const { data, setSelectedProject, setActivePage } = usePortfolio();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('all');
 
@@ -30,8 +31,11 @@ export const WorkPage: React.FC = () => {
   }, [data.projects, activeTag, searchQuery]);
 
   return (
-    <div className="space-y-16 md:space-y-20">
-      {/* 1. Header */}
+    <div className="space-y-12 md:space-y-16">
+      {/* 1. Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'Work & Projects' }]} />
+
+      {/* 2. Header */}
       <section className="space-y-3 max-w-3xl">
         <span className="font-eyebrow text-[11px] font-bold tracking-[0.18em] text-[var(--text-tertiary)] uppercase block">
           Selected Projects
@@ -102,7 +106,7 @@ export const WorkPage: React.FC = () => {
             <div className="aspect-[16/10] w-full overflow-hidden bg-[var(--surface-secondary)] relative border-b border-[var(--border)]">
               <img
                 src={project.image}
-                alt={project.title}
+                alt={`${project.title} — ${project.tagline || project.category} interface screenshot`}
                 className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
                 referrerPolicy="no-referrer"
               />
@@ -170,6 +174,34 @@ export const WorkPage: React.FC = () => {
           No projects match the selected query.
         </div>
       )}
+
+      {/* 4. Internal Links & Connect */}
+      <section className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+            Interested in building together or hiring?
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            Read professional background and timeline, or reach out directly for full-time customer service roles.
+          </p>
+        </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            onClick={() => setActivePage('experience')}
+            className="btn-primary text-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Briefcase className="w-3.5 h-3.5" />
+            <span>Experience</span>
+          </button>
+          <button
+            onClick={() => setActivePage('contact')}
+            className="btn-secondary text-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Contact</span>
+          </button>
+        </div>
+      </section>
     </div>
   );
 };

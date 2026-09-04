@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Mail, ArrowUpRight, Copy, Check, Send, Sparkles } from 'lucide-react';
 import { InteractiveTearSlip } from '../InteractiveTearSlip';
+import { Breadcrumbs } from '../Breadcrumbs';
 
 export const ContactPage: React.FC = () => {
   const { data, setStatusMessage } = usePortfolio();
@@ -27,26 +28,29 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-16 md:space-y-20">
-      {/* 1. Header */}
+    <div className="space-y-12 md:space-y-16">
+      {/* 1. Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'Contact' }]} />
+
+      {/* 2. Header */}
       <section className="space-y-3 max-w-3xl">
         <span className="font-eyebrow text-[11px] font-bold tracking-[0.18em] text-[var(--text-tertiary)] uppercase block">
           Direct Inquiries
         </span>
         <h1 className="font-display-title text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.08]">
-          Get in Touch
+          Get in Touch &amp; Connect
         </h1>
         <p className="text-lg text-[var(--text-secondary)] leading-relaxed font-normal">
           Available for frontline customer support positions, technical operations, and web development collaboration.
         </p>
       </section>
 
-      {/* 2. Interactive Tear-Off Slip Hero on Contact Page */}
+      {/* 3. Interactive Tear-Off Slip Hero on Contact Page */}
       <section className="pt-2">
         <InteractiveTearSlip />
       </section>
 
-      {/* 3. Contact Grid */}
+      {/* 4. Contact Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 pt-8 border-t border-[var(--border)] items-start">
         {/* Left Column: Direct Communication */}
         <div className="lg:col-span-6 space-y-8">
@@ -144,7 +148,7 @@ export const ContactPage: React.FC = () => {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Jane Doe"
+                    placeholder="e.g. Alex Morgan"
                     className="w-full bg-[var(--surface-secondary)] border border-[var(--border)] rounded-md px-3 py-2 text-xs sm:text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none focus:border-[var(--border-strong)] transition-colors"
                   />
                 </div>
@@ -156,7 +160,7 @@ export const ContactPage: React.FC = () => {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="jane@company.com"
+                    placeholder="alex@organization.com"
                     className="w-full bg-[var(--surface-secondary)] border border-[var(--border)] rounded-md px-3 py-2 text-xs sm:text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none focus:border-[var(--border-strong)] transition-colors"
                   />
                 </div>

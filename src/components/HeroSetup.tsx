@@ -104,7 +104,7 @@ export const HeroSetup: React.FC = () => {
                 {data.profile.avatarUrl ? (
                   <img
                     src={data.profile.avatarUrl}
-                    alt={data.profile.name}
+                    alt={`${data.profile.name} — Profile Avatar`}
                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mx-auto ring-4 ring-cyan-500/30 shadow-lg"
                     referrerPolicy="no-referrer"
                   />

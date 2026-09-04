@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0c"/>
+      <stop offset="100%" stop-color="#18181c"/>
+    </linearGradient>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1c22"/>
+      <stop offset="100%" stop-color="#141418"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-grad)"/>
+
+  <!-- Subtle Grid Lines -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="100" y1="0" x2="100" y2="630"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="1100" y1="0" x2="1100" y2="630"/>
+    <line x1="0" y1="120" x2="1200" y2="120"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="510" x2="1200" y2="510"/>
+  </g>
+
+  <!-- Brand Pill / Status -->
+  <g transform="translate(100, 80)">
+    <rect width="360" height="40" rx="20" fill="#1f1f26" stroke="#2e2e38" stroke-width="1"/>
+    <circle cx="24" cy="20" r="5" fill="#10b981"/>
+    <text x="42" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#a1a1aa" letter-spacing="0.5">OPEN TO OPPORTUNITIES · BANGALORE</text>
+  </g>
+
+  <!-- Main Headline -->
+  <text x="100" y="210" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="68" font-weight="800" fill="#ffffff" letter-spacing="-1.5">
+    Riyaj Sk
+  </text>
+  <text x="100" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="600" fill="#10b981" letter-spacing="-0.5">
+    Customer Service Representative &amp; Web Builder
+  </text>
+  <text x="100" y="325" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="400" fill="#a1a1aa">
+    Concentrix Bangalore · 80% WhatsApp &amp; Email Concurrency · 26 Certifications · MEHFIL &amp; Zero Cap
+  </text>
+
+  <!-- Metrics Bento Cards -->
+  <g transform="translate(100, 400)">
+    <!-- Card 1 -->
+    <rect x="0" y="0" width="310" height="150" rx="16" fill="url(#card-grad)" stroke="#27272a" stroke-width="1"/>
+    <text x="30" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" fill="#ffffff">98.5%</text>
+    <text x="30" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#10b981" letter-spacing="0.5">CSAT RATING</text>
+    <text x="30" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="400" fill="#71717a">Concentrix customer satisfaction</text>
+
+    <!-- Card 2 -->
+    <rect x="340" y="0" width="310" height="150" rx="16" fill="url(#card-grad)" stroke="#27272a" stroke-width="1"/>
+    <text x="370" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" fill="#ffffff">2+ Yrs</text>
+    <text x="370" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#10b981" letter-spacing="0.5">EXPERIENCE</text>
+    <text x="370" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="400" fill="#71717a">BPO triage, email &amp; WhatsApp</text>
+
+    <!-- Card 3 -->
+    <rect x="680" y="0" width="310" height="150" rx="16" fill="url(#card-grad)" stroke="#27272a" stroke-width="1"/>
+    <text x="710" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" fill="#ffffff">26</text>
+    <text x="710" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#10b981" letter-spacing="0.5">CERTIFICATIONS</text>
+    <text x="710" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="400" fill="#71717a">AI, InfoSec &amp; Microsoft 365</text>
+  </g>
+
+  <!-- Domain Tag -->
+  <text x="1100" y="590" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace" font-size="16" font-weight="500" fill="#52525b" text-anchor="end">
+    riyajsk.vercel.app
+  </text>
+</svg>

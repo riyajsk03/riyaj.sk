@@ -9,11 +9,13 @@ import { CertificationsPage } from './components/pages/CertificationsPage';
 import { WorkPage } from './components/pages/WorkPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { AdminPage } from './components/pages/AdminPage';
+import { NotFoundPage } from './components/pages/NotFoundPage';
 import { AdminAuthModal } from './components/AdminAuthModal';
 import { ProjectModal } from './components/ProjectModal';
 import { BlogModal } from './components/BlogModal';
 import { InteractiveTerminal } from './components/InteractiveTerminal';
 import { LaunchScreen } from './components/LaunchScreen';
+import { SEOHead } from './components/SEOHead';
 
 const AppContent: React.FC = () => {
   const { activePage, statusMessage, setStatusMessage } = usePortfolio();
@@ -34,8 +36,10 @@ const AppContent: React.FC = () => {
         return <ContactPage />;
       case 'admin':
         return <AdminPage />;
+      case 'not-found':
+        return <NotFoundPage />;
       default:
-        return <HomePage />;
+        return <NotFoundPage />;
     }
   };
 
@@ -50,6 +54,9 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-[var(--bg)] text-[var(--text-primary)] transition-colors duration-200">
+      {/* Dynamic SEO Meta Tags, Canonical URL & Structured Data */}
+      <SEOHead activePage={activePage} />
+
       {/* Website Initial Launch Screen */}
       <LaunchScreen />
 

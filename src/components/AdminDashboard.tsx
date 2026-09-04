@@ -186,7 +186,7 @@ export const AdminDashboard: React.FC = () => {
                 {profileForm.avatarUrl ? (
                   <img
                     src={profileForm.avatarUrl}
-                    alt="Preview"
+                    alt="Profile Photo Preview"
                     className="w-24 h-24 rounded-full object-cover ring-4 ring-cyan-500 shadow-md"
                   />
                 ) : (

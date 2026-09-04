@@ -101,7 +101,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNext, onNavigate }) =>
             {profile.avatarUrl ? (
               <img
                 src={profile.avatarUrl}
-                alt={profile.name}
+                alt={`${profile.name} — Profile Avatar`}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -215,7 +215,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNext, onNavigate }) =>
 
               {tempPhotoUrl && (
                 <div className="flex items-center gap-2 p-2 rounded-lg bg-white dark:bg-[#262121] border border-[#1D1818]/20">
-                  <img src={tempPhotoUrl} alt="Preview" className="w-8 h-8 rounded object-cover" />
+                  <img src={tempPhotoUrl} alt="Profile Photo Upload Preview" className="w-8 h-8 rounded object-cover" />
                   <span className="text-xs font-mono">Ready to save</span>
                 </div>
               )}

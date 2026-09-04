@@ -118,7 +118,7 @@ export const IOSAppFrame: React.FC<{ children: React.ReactNode }> = ({ children 
                   ? 'bg-[var(--btn-pill-bg)] text-[var(--btn-pill-text)]'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]'
               }`}
-              title="Admin Portal (xriyajsk@gmail.com)"
+              title="Admin Portal (Riyaj Sk)"
             >
               <Shield className={`w-3.5 h-3.5 ${isAdmin ? 'text-[var(--accent-green)]' : ''}`} />
               <span className="hidden sm:inline">Admin</span>
@@ -143,38 +143,94 @@ export const IOSAppFrame: React.FC<{ children: React.ReactNode }> = ({ children 
         </AnimatePresence>
       </main>
 
-      {/* 3. Footer */}
-      <footer className="w-full border-t border-[var(--border)] py-8 text-xs text-[var(--text-tertiary)] hidden md:block">
-        <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-          <div className="font-mono">
-            © {new Date().getFullYear()} Riyaj Sk. Customer Experience Specialist &amp; Web Creator.
+      {/* 3. Footer with Deep Internal Links & SEO Sources */}
+      <footer className="w-full border-t border-[var(--border)] py-10 text-xs text-[var(--text-tertiary)] hidden md:block">
+        <div className="max-w-5xl mx-auto px-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="font-mono">
+              © {new Date().getFullYear()} Riyaj Sk · Bangalore, India · Customer Service Rep &amp; Web Builder
+            </div>
+
+            {/* Internal Navigation Links for SEO */}
+            <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-4 text-[11px] font-mono">
+              <button onClick={() => setActivePage('home')} className="hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+                Overview
+              </button>
+              <button onClick={() => setActivePage('about')} className="hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+                About
+              </button>
+              <button onClick={() => setActivePage('experience')} className="hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+                Experience
+              </button>
+              <button onClick={() => setActivePage('certifications')} className="hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+                Certs
+              </button>
+              <button onClick={() => setActivePage('work')} className="hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+                Work
+              </button>
+              <button onClick={() => setActivePage('contact')} className="hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+                Contact
+              </button>
+            </nav>
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setActivePage('admin')}
-              className="hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-1 font-mono text-[11px]"
-            >
-              <Shield className="w-3 h-3" />
-              <span>Admin Panel</span>
-            </button>
-            <a
-              href="https://linkedin.com/in/riyaj-sk-409605335"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--text-primary)] transition-colors flex items-center gap-0.5"
-            >
-              <span>LinkedIn</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </a>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--text-primary)] transition-colors flex items-center gap-0.5"
-            >
-              <span>GitHub</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </a>
+
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-[var(--border)] text-[11px] font-mono">
+            <div className="flex items-center gap-3">
+              <a
+                href="/sitemap.xml"
+                target="_blank"
+                rel="noopener"
+                className="hover:text-[var(--text-primary)] transition-colors"
+              >
+                sitemap.xml
+              </a>
+              <span>·</span>
+              <a
+                href="/robots.txt"
+                target="_blank"
+                rel="noopener"
+                className="hover:text-[var(--text-primary)] transition-colors"
+              >
+                robots.txt
+              </a>
+              <span>·</span>
+              <a
+                href="/llms.txt"
+                target="_blank"
+                rel="noopener"
+                className="hover:text-[var(--text-primary)] transition-colors"
+              >
+                llms.txt
+              </a>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setActivePage('admin')}
+                className="hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <Shield className="w-3 h-3" />
+                <span>Admin</span>
+              </button>
+              <a
+                href="https://linkedin.com/in/riyaj-sk-409605335"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[var(--text-primary)] transition-colors flex items-center gap-0.5"
+              >
+                <span>LinkedIn</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
+              <a
+                href="https://github.com/xriyajsk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[var(--text-primary)] transition-colors flex items-center gap-0.5"
+              >
+                <span>GitHub</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
+            </div>
           </div>
         </div>
       </footer>

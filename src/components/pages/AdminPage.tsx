@@ -31,6 +31,7 @@ import {
   Copy
 } from 'lucide-react';
 import { Experience, SkillCategory, Project, Certificate, BlogPost } from '../../types';
+import { Breadcrumbs } from '../Breadcrumbs';
 
 export const AdminPage: React.FC = () => {
   const {
@@ -163,7 +164,10 @@ export const AdminPage: React.FC = () => {
   // IF NOT AUTHENTICATED OR NOT RIYAJ SK: Render the dedicated login gate
   if (!isAdmin) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-12">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-12 space-y-6">
+        <div className="w-full max-w-lg">
+          <Breadcrumbs items={[{ label: 'Admin Portal' }]} />
+        </div>
         <motion.div
           initial={{ opacity: 0, scale: 0.97, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -331,7 +335,10 @@ export const AdminPage: React.FC = () => {
 
   // AUTHENTICATED AS Riyaj Sk - Full Admin Panel Page
   return (
-    <div className="space-y-10 max-w-5xl mx-auto pb-16">
+    <div className="space-y-8 max-w-5xl mx-auto pb-16">
+      {/* Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'Admin Portal' }]} />
+
       {/* Top Banner Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--border)]">
         <div className="space-y-1">
@@ -439,7 +446,7 @@ export const AdminPage: React.FC = () => {
                 {profileForm.avatarUrl ? (
                   <img
                     src={profileForm.avatarUrl}
-                    alt="Preview"
+                    alt="Profile Avatar Preview"
                     className="w-24 h-24 rounded-full object-cover border-2 border-[var(--border-strong)] shadow-sm"
                   />
                 ) : (

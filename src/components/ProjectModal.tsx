@@ -39,7 +39,7 @@ export const ProjectModal: React.FC = () => {
             <div className="aspect-video w-full rounded-lg overflow-hidden bg-[var(--surface-secondary)] border border-[var(--border)]">
               <img
                 src={selectedProject.image}
-                alt={selectedProject.title}
+                alt={`${selectedProject.title} — ${selectedProject.tagline || selectedProject.category} detailed interface preview`}
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />

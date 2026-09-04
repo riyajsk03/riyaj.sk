@@ -39,6 +39,34 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Crawlers & SEO Routes
+app.get('/sitemap.xml', (req, res) => {
+  const filePath = path.join(process.cwd(), 'public', 'sitemap.xml');
+  if (fs.existsSync(filePath)) {
+    res.type('application/xml').sendFile(filePath);
+  } else {
+    res.status(404).send('Not Found');
+  }
+});
+
+app.get('/robots.txt', (req, res) => {
+  const filePath = path.join(process.cwd(), 'public', 'robots.txt');
+  if (fs.existsSync(filePath)) {
+    res.type('text/plain').sendFile(filePath);
+  } else {
+    res.status(404).send('Not Found');
+  }
+});
+
+app.get(['/llms.txt', '/Ilms.txt'], (req, res) => {
+  const filePath = path.join(process.cwd(), 'public', 'llms.txt');
+  if (fs.existsSync(filePath)) {
+    res.type('text/plain; charset=utf-8').sendFile(filePath);
+  } else {
+    res.status(404).send('Not Found');
+  }
+});
+
 app.get('/api/portfolio', (req, res) => {
   const data = getStoredData();
   res.json({ success: true, data });

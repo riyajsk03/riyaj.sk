@@ -1,0 +1,12 @@
+# robots.txt for https://riyajsk.vercel.app
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://riyajsk.vercel.app/sitemap.xml
+
+# LLM documentation for AI Crawlers
+# Perplexity, Claude, ChatGPT, Gemini, Copilot
+# See https://riyajsk.vercel.app/llms.txt

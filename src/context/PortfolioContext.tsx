@@ -142,23 +142,47 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, []);
 
-  // Multi-page navigation state
-  const [activePage, setActivePageState] = useState<PageId>(() => {
-    if (typeof window !== 'undefined' && window.location.hash) {
-      const hash = window.location.hash.replace('#', '') as PageId;
-      if (['home', 'about', 'experience', 'certifications', 'work', 'contact', 'admin'].includes(hash)) {
-        return hash;
-      }
-    }
-    return 'home';
-  });
+  // Multi-page navigation & URL resolution (Custom domain & proper page sources)
+  const resolvePageFromLocation = (): PageId => {
+    if (typeof window === 'undefined') return 'home';
 
-  const [historyStack, setHistoryStack] = useState<PageId[]>(['home']);
+    // 1. Check path (e.g. /about, /experience)
+    const rawPath = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+    if (rawPath === '' || rawPath === 'home') {
+      // Check if there is a hash override (e.g. /#experience)
+      if (window.location.hash) {
+        const hash = window.location.hash.replace('#', '').toLowerCase();
+        if (['home', 'about', 'experience', 'certifications', 'work', 'contact', 'admin'].includes(hash)) {
+          return hash as PageId;
+        }
+      }
+      return 'home';
+    }
+
+    if (['about', 'experience', 'certifications', 'work', 'contact', 'admin'].includes(rawPath)) {
+      return rawPath as PageId;
+    }
+    if (rawPath === 'projects') {
+      return 'work';
+    }
+
+    // Unrecognized route -> 404 Custom Not Found page
+    return 'not-found';
+  };
+
+  const [activePage, setActivePageState] = useState<PageId>(resolvePageFromLocation);
+
+  const [historyStack, setHistoryStack] = useState<PageId[]>([resolvePageFromLocation()]);
   const [historyIdx, setHistoryIdx] = useState<number>(0);
 
   const setActivePage = (page: PageId) => {
     setActivePageState(page);
-    window.location.hash = page;
+    const targetUrl = page === 'home' ? '/' : `/${page}`;
+    try {
+      window.history.pushState({ page }, '', targetUrl);
+    } catch (e) {
+      window.location.hash = page;
+    }
     setHistoryStack((prev) => {
       const sliced = prev.slice(0, historyIdx + 1);
       return [...sliced, page];
@@ -176,7 +200,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setHistoryIdx(nextIdx);
       const page = historyStack[nextIdx];
       setActivePageState(page);
-      window.location.hash = page;
+      const targetUrl = page === 'home' ? '/' : `/${page}`;
+      window.history.replaceState({ page }, '', targetUrl);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -187,21 +212,23 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setHistoryIdx(nextIdx);
       const page = historyStack[nextIdx];
       setActivePageState(page);
-      window.location.hash = page;
+      const targetUrl = page === 'home' ? '/' : `/${page}`;
+      window.history.replaceState({ page }, '', targetUrl);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  // Listen to popstate / hashchange
+  // Listen to popstate / history navigation & hashchange
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '') as PageId;
-      if (['home', 'about', 'experience', 'certifications', 'work', 'contact', 'admin'].includes(hash)) {
-        setActivePageState(hash);
-      }
+    const handlePopState = () => {
+      setActivePageState(resolvePageFromLocation());
     };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
   }, []);
 
   // Chrome first-time setup wizard

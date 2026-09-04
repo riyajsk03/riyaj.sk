@@ -133,7 +133,7 @@ export const ProjectsSection: React.FC = () => {
               <div className="relative aspect-video w-full overflow-hidden bg-neutral-950">
                 <img
                   src={project.image}
-                  alt={project.title}
+                  alt={`${project.title} — ${project.tagline || project.category} interface preview`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                   referrerPolicy="no-referrer"
                 />
